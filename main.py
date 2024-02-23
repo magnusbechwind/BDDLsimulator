@@ -1,16 +1,31 @@
-# This is a sample Python script.
+import argparse
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
+from parse.parser import Parse as parse
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
 
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    text = "A tool to for simulating BDDL problems"
+    parser = argparse.ArgumentParser(description=text, formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument("-D", "--domain", help="domain file path", default="models/SAT2023_GDDL/GDDL_models/connect-c/domain.ig")
+    parser.add_argument("-P", "--problem", help="problem file path", default="models/SAT2023_GDDL/GDDL_models/connect-c/2x2_3_connect2.ig")
+    parser.add_argument("--debug", type=int, help="[0/1], default 0", default=0)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # TODO remove
+    parser.add_argument("--test", type=int, default= 0)
+
+    args = parser.parse_args()
+    if args.test == 1:
+        args.domain = "./testdomain.ig"
+        args.problem = "./testproblem.ig"
+
+    parsed_instance = parse(args)
+
+    for action in parsed_instance.black_actions:
+        print(action)
+
+
+
+
