@@ -43,12 +43,12 @@ def parse_action_list(lines, x_max, y_max):
 
     return actions
 
+
 def parse_initial_state(lines: [str]):
     initial_state = []
     for line in lines:
         initial_state.append(initpredicate.InitPredicate(line))
     return initial_state
-
 
 
 class Parse:
@@ -62,6 +62,8 @@ class Parse:
         self.y_max = 0
         self.initial_state = []
         self.depth = 0
+        self.black_goals = []
+        self.white_goals = []
 
         problem_path = 'intermediate_files/combined_input.ig'
         combine(args, problem_path)
@@ -87,12 +89,48 @@ class Parse:
         self.y_max = int(size[1])
 
         self.initial_state = parse_initial_state(self.parsed_dict["#init"][0])
-        print([str(x) for x in self.initial_state])
 
         # parse depth
         self.depth = int(self.parsed_dict["#depth"][0][0])
-        print(self.depth)
 
         # Parse problem file (action list)
         self.black_actions = parse_action_list(self.parsed_dict["#blackactions"], self.x_max, self.y_max)
         self.white_actions = parse_action_list(self.parsed_dict["#whiteactions"], self.x_max, self.y_max)
+
+        black_goals = self.parsed_dict["#blackgoal"]
+        for black_goal in black_goals:
+            self.black_goals.append(action.parse_sub_conditions(black_goal))
+
+        white_goals = self.parsed_dict["#whitegoal"]
+        for white_goals in white_goals:
+            self.white_goals.append(action.parse_sub_conditions(white_goals))
+
+    def __str__(self):
+        string = ('Board-size: ' + str(self.x_max) + 'x' + str(self.y_max) + '\n' +
+                  'Initial state: ' + str([str(init) for init in self.initial_state])[1:-1] + '\n' +
+                  'Depth: ' + str(self.depth) + '\n' +
+                  'Black Goals: \n')
+
+        for goal in self.black_goals:
+            for cond in goal:
+                string = string + str(cond)
+            string = string + '\n'
+
+        string = string + "White Goals: \n"
+
+        for goal in self.white_goals:
+            for cond in goal:
+                string = string + str(cond)
+            string = string + '\n'
+
+        string = string + "Black Actions: \n"
+
+        for black_action in self.black_actions:
+            string = string + str(black_action) + '\n'
+
+        string = string + "White Actions: \n"
+
+        for white_action in self.white_actions:
+            string = string + str(white_action) + '\n'
+
+        return string

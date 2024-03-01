@@ -43,8 +43,10 @@ class Action:
         self.preconditions = []
         self.effects = []
 
-        # Compute index-bounds based on constraints and board-size
+        # just action name is enough:
+        self.action_name = action_lines[0][-1]
 
+        # Compute index-bounds based on constraints and board-size
         preconditions = action_lines[2][1:]  # Line 2 is :precondition constraint*
         effects = action_lines[3][1:]  # Line 3 is :effect constraint*
 
@@ -69,9 +71,6 @@ class Action:
 
         if y_max_constraint > 0:
             self.y_max = self.y_max - y_max_constraint
-
-        # just action name is enough:
-        self.action_name = action_lines[0][-1]
 
         # parsing the parameter names, for now restricting to one pair only:
         # asserting if the current line is parameter line:

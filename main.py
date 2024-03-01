@@ -1,6 +1,7 @@
 import argparse
 
 from parse.parser import Parse as parse
+from game.game import Game
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
@@ -18,13 +19,18 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     if args.test == 1:
-        args.domain = "./testdomain.ig"
-        args.problem = "./testproblem.ig"
+        args.domain = "./models/SAT2023_GDDL/GDDL_models/breakthrough/domain.ig"
+        args.problem = "./models/SAT2023_GDDL/GDDL_models/breakthrough/3x6_9.ig"
 
     parsed_instance = parse(args)
 
-    for action in parsed_instance.black_actions:
-        print(action)
+    game = Game(parsed_instance)
+    game.play()
+
+
+
+
+
 
 
 

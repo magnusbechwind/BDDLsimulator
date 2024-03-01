@@ -14,7 +14,7 @@ class SubCondition:
         if sub_cond[:3] == "NOT":
             self.should_be = False
 
-        sub_cond = sub_cond.strip("NOT").split("(", 1)
+        sub_cond = sub_cond.strip("NOT").strip("(").split("(", 1)
         self.predicate = sub_cond[0]
 
         sub_cond = sub_cond[1]
@@ -39,7 +39,19 @@ class SubCondition:
             self.y_offset = - y_value
 
     def __str__(self):
-        string = self.predicate + "(?x+" + str(self.x_offset) + ", ?y+" + str(self.y_offset) + ")"
+        string = self.predicate + "(?x"
+        if self.x_offset > 0:
+            string = string + "+" + str(self.x_offset)
+        if self.x_offset < 0:
+            string = string + str(self.x_offset)
+        string = string + ",?y"
+        if self.y_offset > 0:
+            string = string + "+" + str(self.y_offset)
+        if self.y_offset < 0:
+            string = string + str(self.y_offset)
+
+        string = string + ")"
+
         if self.should_be:
             return string
         else:
