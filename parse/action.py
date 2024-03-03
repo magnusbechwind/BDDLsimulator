@@ -1,35 +1,29 @@
-from parse.subcondition import SubCondition
+from parse.subcondition import SubCondition, CoordinateType
 
-def parse_sub_conditions(lines):
+
+def parse_sub_conditions(lines, x_max, y_max):
     sub_conditions = []
     for sub_cond in lines:
-        sub_conditions.append(SubCondition(sub_cond))
+        sub_conditions.append(SubCondition(sub_cond, x_max, y_max))
 
     return sub_conditions
 
-def compute_bounds(subconditions: list[SubCondition]):
-    x_min_constraint = 0
-    x_max_constraint = 0
-    y_min_constraint = 0
-    y_max_constraint = 0
 
-    for subcond in subconditions:
-        x_offset = subcond.x_offset
-        y_offset = subcond.y_offset
+def compute_bounds(subconditions: list[SubCondition], x_max, y_max):
+    x_min = 1
+    x_max = x_max
+    y_min = 1
+    y_max = y_max
 
-        if x_offset > 0 and x_max_constraint < x_offset:
-            x_max_constraint = x_offset
+    for cond in subconditions:
+        x_min = max(x_min, cond.x_min)
+        x_max = min(x_max, cond.x_max)
+        y_min = max(y_min, cond.y_min)
+        y_max = min(y_max, cond.y_max)
 
-        elif x_offset < 0 and x_min_constraint < abs(x_offset):
-            x_min_constraint = abs(x_offset)
+    return x_min, x_max, y_min, y_max
 
-        if y_offset > 0 and y_max_constraint < y_offset:
-            y_max_constraint = y_offset
 
-        elif y_offset < 0 and y_min_constraint < abs(y_offset):
-            y_min_constraint = abs(y_offset)
-
-    return x_min_constraint, y_min_constraint, x_max_constraint, y_max_constraint
 class Action:
 
     def __init__(self, action_lines, x_max, y_max):
@@ -50,27 +44,14 @@ class Action:
         preconditions = action_lines[2][1:]  # Line 2 is :precondition constraint*
         effects = action_lines[3][1:]  # Line 3 is :effect constraint*
 
-        self.preconditions = parse_sub_conditions(preconditions)
-        self.effects = parse_sub_conditions(effects)
+        self.preconditions = parse_sub_conditions(preconditions, x_max, y_max)
+        self.effects = parse_sub_conditions(effects, x_max, y_max)
 
         conditions = []
         conditions.extend(self.preconditions)
         conditions.extend(self.effects)
 
-        x_min_constraint, y_min_constraint, x_max_constraint, y_max_constraint = compute_bounds(conditions)
-
-        # Check if more constraining that board-size
-        if x_min_constraint > 0:
-            self.x_min = self.x_min + x_min_constraint
-
-        if x_max_constraint > 0:
-            self.x_max = self.x_max - x_max_constraint
-
-        if y_min_constraint > 0:
-            self.y_min = self.y_min + y_min_constraint
-
-        if y_max_constraint > 0:
-            self.y_max = self.y_max - y_max_constraint
+        self.x_min, self.x_max, self.y_min, self.y_max = compute_bounds(conditions, x_max, y_max)
 
         # parsing the parameter names, for now restricting to one pair only:
         # asserting if the current line is parameter line:
@@ -83,8 +64,8 @@ class Action:
         return ('action: ' + self.action_name +
                 '\n  parameters: ' + str(self.parameters) +
                 '\n  x_min: ' + str(self.x_min) +
-                '\n  y_min: ' + str(self.y_min) +
                 '\n  x_max: ' + str(self.x_max) +
+                '\n  y_min: ' + str(self.y_min) +
                 '\n  y_max: ' + str(self.y_max) +
                 '\n  preconditions: ' + str([str(cond) for cond in self.preconditions])[1:-1] +
                 '\n  effects: ' + str([str(cond) for cond in self.effects])[1:-1])

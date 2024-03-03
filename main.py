@@ -11,20 +11,23 @@ if __name__ == '__main__':
     text = "A tool to for simulating BDDL problems"
     parser = argparse.ArgumentParser(description=text, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("-D", "--domain", help="domain file path", default="models/SAT2023_GDDL/GDDL_models/connect-c/domain.ig")
-    parser.add_argument("-P", "--problem", help="problem file path", default="models/SAT2023_GDDL/GDDL_models/connect-c/2x2_3_connect2.ig")
+    parser.add_argument("-P", "--problem", help="problem file path", default="models/SAT2023_GDDL/GDDL_models/connect-c/6x6_11_connect4.ig")
     parser.add_argument("--debug", type=int, help="[0/1], default 0", default=0)
+    parser.add_argument("--print_indices", type=int, help="whether to print indices on game-board, [0/1] defaults 1", default=1)
+    parser.add_argument("--show_grid", type=int, help="whether to print grid, [0/1] defaults 1", default=1)
 
     # TODO remove
     parser.add_argument("--test", type=int, default= 0)
 
     args = parser.parse_args()
-    if args.test == 1:
-        args.domain = "./models/SAT2023_GDDL/GDDL_models/breakthrough/domain.ig"
-        args.problem = "./models/SAT2023_GDDL/GDDL_models/breakthrough/3x6_9.ig"
 
     parsed_instance = parse(args)
 
-    game = Game(parsed_instance)
+    game = Game(parsed_instance, args.show_grid == 1, args.print_indices == 1)
+
+    if args.debug == 1:
+        print(parsed_instance)
+
     game.play()
 
 

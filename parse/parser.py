@@ -44,11 +44,14 @@ def parse_action_list(lines, x_max, y_max):
     return actions
 
 
-def parse_initial_state(lines: [str]):
-    initial_state = []
-    for line in lines:
-        initial_state.append(initpredicate.InitPredicate(line))
-    return initial_state
+def parse_initial_state(parsed_dict):
+    if len(parsed_dict["#init"]) > 0:
+        lines = parsed_dict["#init"][0]
+        initial_state = []
+        for line in lines:
+            initial_state.append(initpredicate.InitPredicate(line))
+        return initial_state
+    return []
 
 
 class Parse:
@@ -88,7 +91,7 @@ class Parse:
         self.x_max = int(size[0])
         self.y_max = int(size[1])
 
-        self.initial_state = parse_initial_state(self.parsed_dict["#init"][0])
+        self.initial_state = parse_initial_state(self.parsed_dict)
 
         # parse depth
         self.depth = int(self.parsed_dict["#depth"][0][0])
@@ -99,11 +102,11 @@ class Parse:
 
         black_goals = self.parsed_dict["#blackgoal"]
         for black_goal in black_goals:
-            self.black_goals.append(action.parse_sub_conditions(black_goal))
+            self.black_goals.append(action.parse_sub_conditions(black_goal, self.x_max, self.y_max))
 
         white_goals = self.parsed_dict["#whitegoal"]
         for white_goals in white_goals:
-            self.white_goals.append(action.parse_sub_conditions(white_goals))
+            self.white_goals.append(action.parse_sub_conditions(white_goals, self.x_max, self.y_max))
 
     def __str__(self):
         string = ('Board-size: ' + str(self.x_max) + 'x' + str(self.y_max) + '\n' +

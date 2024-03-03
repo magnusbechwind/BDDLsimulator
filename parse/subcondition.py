@@ -1,13 +1,27 @@
+from enum import Enum
+
+
+class CoordinateType(Enum):
+    OFFSET = 1
+    ABSOLUTE = 2
+
 class SubCondition:
     """
     Represents the sub-condition pred(e1, e2) or not(pred(e1, e2))
     """
 
-    def __init__(self, sub_cond):
-        self.x_offset = 0
-        self.y_offset = 0
+    def __init__(self, sub_cond, x_max, y_max):
+        self.x = 0
+        self.y = 0
+        self.x_min = 1
+        self.x_max = x_max
+        self.y_min = 1
+        self.y_max = y_max
         self.predicate = ""
         self.should_be = True
+        self.x_type = None
+        self.y_type = None
+        self.string = sub_cond
 
         sub_cond = sub_cond.replace(' ', '')
         sub_cond = sub_cond.strip("(").strip(")")
@@ -24,35 +38,25 @@ class SubCondition:
 
         if ('+' in x_index):
             x_value = int(x_index.split("+")[-1])
-            self.x_offset = x_value
+            self.x = x_value
+            self.x_max = self.x_max - x_value
 
         elif ('-' in x_index):
             x_value = int(x_index.split("-")[-1])
-            self.x_offset = - x_value
+            self.x = - x_value
+            self.x_min = self.x_min + x_value
 
         if ('+' in y_index):
             y_value = int(y_index.split("+")[-1])
-            self.y_offset = y_value
+            self.y = y_value
+            self.y_max = self.y_max - y_value
 
         elif ('-' in y_index):
             y_value = int(y_index.split("-")[-1])
-            self.y_offset = - y_value
+            self.y = - y_value
+            self.y_min = self.y_min + y_value
+
+
 
     def __str__(self):
-        string = self.predicate + "(?x"
-        if self.x_offset > 0:
-            string = string + "+" + str(self.x_offset)
-        if self.x_offset < 0:
-            string = string + str(self.x_offset)
-        string = string + ",?y"
-        if self.y_offset > 0:
-            string = string + "+" + str(self.y_offset)
-        if self.y_offset < 0:
-            string = string + str(self.y_offset)
-
-        string = string + ")"
-
-        if self.should_be:
-            return string
-        else:
-            return "NOT(" + string + ")"
+        return self.string
