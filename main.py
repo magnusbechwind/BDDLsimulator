@@ -16,9 +16,6 @@ if __name__ == '__main__':
     parser.add_argument("--print_indices", type=int, help="whether to print indices on game-board, [0/1] defaults 1", default=1)
     parser.add_argument("--show_grid", type=int, help="whether to print grid, [0/1] defaults 1", default=1)
 
-    # TODO remove
-    parser.add_argument("--test", type=int, default= 0)
-
     args = parser.parse_args()
 
     parsed_instance = parse(args)

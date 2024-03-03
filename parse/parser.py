@@ -1,25 +1,6 @@
 from parse import action
 from parse import initpredicate
 
-
-def combine(args, path):
-    domain_file = args.domain
-    problem_file = args.problem
-
-    f_domain = open(domain_file, "r")
-    lines = f_domain.readlines()
-
-    f_domain.close()
-
-    f_combined_file = open(path, 'w')
-    f_combined_file.writelines(lines)
-
-    f_problem = open(problem_file, "r")
-    lines = f_problem.readlines()
-
-    f_combined_file.writelines(lines)
-
-
 def parse_action_list(lines, x_max, y_max):
     if len(lines) == 0:
         return []  # No actions to parse
@@ -68,11 +49,20 @@ class Parse:
         self.black_goals = []
         self.white_goals = []
 
-        problem_path = 'intermediate_files/combined_input.ig'
-        combine(args, problem_path)
+        domain_file = args.domain
+        problem_file = args.problem
 
-        f = open(problem_path, 'r')
-        lines = f.readlines()
+        f_domain = open(domain_file, "r")
+        domain_lines = f_domain.readlines()
+        f_domain.close()
+
+        f_problem = open(problem_file, "r")
+        problem_lines = f_problem.readlines()
+        f_problem.close()
+
+        lines = []
+        lines.extend(domain_lines)
+        lines.extend(problem_lines)
 
         for line in lines:
             stripped_line = line.strip("\n").strip(" ").split(" ")
