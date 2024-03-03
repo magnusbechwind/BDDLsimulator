@@ -36,6 +36,35 @@ class SubCondition:
 
         x_index, y_index = sub_cond.split(",")
 
+        if x_index == "xmax":
+            self.x_type = CoordinateType.ABSOLUTE
+            self.x = x_max
+            self.x_min = x_max
+
+        elif x_index == "xmin":
+            self.x_type = CoordinateType.ABSOLUTE
+            self.x = 1
+            self.x_max = 1
+
+        elif "?x" in x_index:
+            self.x_type = CoordinateType.OFFSET
+
+        if y_index == "ymax":
+            self.y_type = CoordinateType.ABSOLUTE
+            self.y = y_max
+            self.y_min = y_max
+
+        elif y_index == "ymin":
+            self.y_type = CoordinateType.ABSOLUTE
+            self.y = 1
+            self.y_max = 1
+
+        elif "?y" in y_index:
+            self.y_type = CoordinateType.OFFSET
+
+
+        # + or - never present when the coordinate is xmax or ymax
+
         if ('+' in x_index):
             x_value = int(x_index.split("+")[-1])
             self.x = x_value
