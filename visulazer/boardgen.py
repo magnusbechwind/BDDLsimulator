@@ -1,4 +1,4 @@
-def gen_board(x, y):
+def gen_board(x, y, preds):
     print("|", end="")
     for i in range(x):
         print("----", end="")
@@ -6,18 +6,15 @@ def gen_board(x, y):
     for i in range(y):
         print("| ", end="")
         for j in range(x):
-            print("   |", end="")
+            if preds[i,j] == "open":
+                print("   |", end="")
+            else:
+                print(preds[i,j][0] + "  |")
         print("\n|", end="")
         for j in range(x):
             print("----", end="")
         print("|\n", end="")
 
 
-class bordgen:
 
-    def __init__(self, dim):
-        self.xmax = dim[0]
-        self.ymax = dim[1]
-
-
-gen_board(5, 5)
+gen_board(5, 5, [])

@@ -85,6 +85,6 @@ class Action:
                 '\n  x_min: ' + str(self.x_min) +
                 '\n  y_min: ' + str(self.y_min) +
                 '\n  x_max: ' + str(self.x_max) +
-                '\n  y_max: ' + str(self.x_max) +
+                '\n  y_max: ' + str(self.y_max) +
                 '\n  preconditions: ' + str([str(cond) for cond in self.preconditions])[1:-1] +
                 '\n  effects: ' + str([str(cond) for cond in self.effects])[1:-1])
