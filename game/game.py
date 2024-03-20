@@ -37,7 +37,7 @@ class GameBoard:
 
     def __str__(self):
         board = ""
-        line = "-" * (self.padding_target + 3) * self.y_max + "-"
+        line = "-" * (self.padding_target + 3) * self.x_max + "-"
         if self.show_grid:
             board = board + line + "\n"
         for y in board_range_to(self.y_max):
