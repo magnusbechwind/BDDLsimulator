@@ -1,0 +1,11 @@
+#blackactions
+%action 1
+:action move-pawn-vertical
+:parameters (?x, ?y) (?a, ?b)
+:precondition (sum(up down)((?x,?y), (?a,?b))(open))
+:effect NOT(black(?x,?y)) black(?a,?b)
+
+#whiteactions
+
+
+
