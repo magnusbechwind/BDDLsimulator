@@ -1,0 +1,12 @@
+New problem file grammar
+
+problem 	::= size init depth goals
+
+size 		::= #boardsize nl int int nl
+
+init 		::= #init nl (piece(int, int)*) nl
+
+depth 		::= #depth nl int nl
+
+goals 		::= #blackgoals nl condition*
+		  	#whitegoals nl condition*

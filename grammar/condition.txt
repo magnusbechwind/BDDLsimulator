@@ -1,0 +1,14 @@
+New condition grammar
+
+condition 	::= (sub.cond*) nl
+
+sub-cond 	::= pred(e1, e2) | NOT(pred(e1, e2)) | range
+
+pred 		::= piece | group-name
+
+range 		::= direction((e1, e2) (e1, e2) (range-cond*))
+direction 	::= up | down | left | right | up-right | up-left | down-right | down-left | union(direction*)
+range-cond 	::= pred | NOT(pred)
+
+e1 			::= ?param-x + int | ?param-x - int | ?param-x | int | xmin | xmax
+e2   		::= ?param-y + int | ?param-y - int | ?param-y | int | ymin | ymax

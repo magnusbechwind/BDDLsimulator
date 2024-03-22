@@ -1,0 +1,21 @@
+New domain file grammar
+
+domain 		::= pieces groups actions
+
+pieces		::= #pieces nl piece* nl
+groups 		::= #groups nl group*
+actions		::= #blackactions nl action*
+				#whiteactions nl action*
+
+piece 		::= str			
+group 		::= group-name(piece*) nl
+group-name 	::= str
+
+action 		::= :action str nl
+				:parameters param+ nl
+				:precondition condition
+				:effect condition
+
+param 		::= (?param-x, ?param-y)
+param-x		::= str
+param-y		::= str
